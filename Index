@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Parker Press — Pro Resumes</title>
+<meta name="description" content="ATS-friendly resumes, fast turnaround." />
+<style>
+  :root { --bg:#0b0b0c; --card:#111114; --muted:#9aa0a6; --text:#f5f7fa; --accent:#0b84ff; }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+  .wrap{max-width:900px;margin:28px auto;padding:0 16px}
+  h1{margin:0 0 6px;font:800 32px/1.1 system-ui}
+  .grid{display:grid;gap:14px}
+  @media(min-width:860px){.plans{grid-template-columns:repeat(3,1fr)}}
+  .card{background:var(--card);border:1px solid #1d1f22;border-radius:18px;padding:16px}
+  .price{font-size:34px;font-weight:900;margin:6px 0}
+  .btn{display:inline-flex;gap:8px;align-items:center;justify-content:center;padding:12px 14px;border-radius:12px;border:1px solid #2a2d31;background:#0d0f12;color:#fff;cursor:pointer}
+  .btn.primary{background:var(--accent);border-color:var(--accent)}
+  .muted{color:var(--muted)} .small{font-size:12px}
+  input,textarea{width:100%;padding:10px;border-radius:12px;border:1px solid #2a2d31;background:#0c0e11;color:#fff}
+  textarea{min-height:110px}
+  .ok{background:#0e4429;border:1px solid #1a7f37;padding:10px;border-radius:12px;margin:10px 0;display:none}
+</style>
+<script>
+  // Your PayPal client ID (you provided earlier)
+  const PAYPAL_CLIENT_ID = "3ztxQd0FVwUF4dPjQ7tb2rwT";
+
+  function successFlow(plan, orderId){
+    const ok = document.getElementById('ok');
+    ok.innerHTML = `Payment received for <b>${plan}</b>. Order ID: <b>${orderId}</b>. Scroll to intake below.`;
+    ok.style.display = 'block';
+    document.getElementById('plan').value = plan;
+    document.getElementById('order').value = orderId;
+    location.hash = 'intake';
+  }
+  function testPurchase(plan){
+    const id = Math.random().toString(36).slice(2,10).toUpperCase();
+    successFlow(plan, id);
+  }
+  function copyPromo(){
+    const u = new URL(location.href);
+    u.searchParams.set('utm_source','social');u.searchParams.set('utm_medium','organic');u.searchParams.set('utm_campaign','resume_launch');
+    navigator.clipboard.writeText(`Get a pro, ATS-friendly resume in 24h: ${u}`).then(()=>alert('Promo link copied')).catch(()=>alert('Copy failed'));
+  }
+</script>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Parker Press — Pro Resumes</h1>
+    <p class="muted">ATS-friendly resumes, fast turnaround. Pay, fill intake, and we start.</p>
+
+    <div id="ok" class="ok">Success</div>
+
+    <!-- Pricing -->
+    <section class="grid plans card" aria-label="Plans">
+      <div>
+        <div class="muted small">Starter</div>
+        <div class="price">$49</div>
+        <div id="pp-starter"></div>
+        <button class="btn" onclick="testPurchase('Starter')">Test Purchase (no charge)</button>
+      </div>
+      <div>
+        <div class="muted small">Pro</div>
+        <div class="price">$79</div>
+        <div id="pp-pro"></div>
+        <button class="btn" onclick="testPurchase('Pro')">Test Purchase (no charge)</button>
+      </div>
+      <div>
+        <div class="muted small">Powerhouse</div>
+        <div class="price">$129</div>
+        <div id="pp-powerhouse"></div>
+        <button class="btn" onclick="testPurchase('Powerhouse')">Test Purchase (no charge)</button>
+      </div>
+    </section>
+
+    <!-- Intake -->
+    <section id="intake" class="card" style="margin-top:16px">
+      <h2 style="margin:0 0 8px">Project Intake</h2>
+      <p class="small muted">Tell us your target role and paste up to 3 job links.</p>
+      <!-- Uses Formspree so no backend/email config is needed -->
+      <form action="https://formspree.io/f/xyyylive" method="POST" class="grid" onsubmit="setTimeout(()=>alert('Thanks! We’ll follow up by email.'),100)">
+        <input name="name" placeholder="Your name">
+        <input name="email" type="email" placeholder="Your email" required>
+        <input name="role" placeholder="Target role (e.g., RN / Sales Manager / Frontend)">
+        <textarea name="jobs" placeholder="Paste job URLs"></textarea>
+        <textarea name="notes" placeholder="Notes (must-include achievements, industries, constraints)"></textarea>
+        <input type="hidden" id="plan" name="plan"><input type="hidden" id="order" name="order">
+        <button class="btn primary" type="submit">Send Intake</button>
+      </form>
+    </section>
+
+    <!-- FAQ + Share -->
+    <section class="card" style="margin-top:16px">
+      <h2 style="margin:0 0 8px">FAQ</h2>
+      <details><summary>What’s included?</summary><div class="small muted">Starter: resume refresh. Pro: resume + cover letter. Powerhouse: resume + cover + LinkedIn polish.</div></details>
+      <details><summary>Turnaround</summary><div class="small muted">Most drafts in 24–48 hours after intake.</div></details>
+      <details><summary>Refunds</summary><div class="small muted">Not happy with the first draft? We’ll revise or refund — your choice.</div></details>
+      <button class="btn" style="margin-top:10px" onclick="copyPromo()">Copy Promo Link</button>
+    </section>
+
+    <p class="small muted" style="margin:18px 0 40px">© Parker Press</p>
+  </div>
+
+  <!-- Load PayPal (after content so the page is quick) -->
+  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD" defer></script>
+  <script>
+    // load real SDK with your client id after DOM ready
+    document.addEventListener('DOMContentLoaded',()=> {
+      const s=document.createElement('script');
+      s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID)}&currency=USD`;
+      s.onload=()=>{
+        const plans=[{name:'Starter',price:49},{name:'Pro',price:79},{name:'Powerhouse',price:129}];
+        for(const p of plans){
+          const id='pp-'+p.name.toLowerCase(); const mount=document.getElementById(id); if(!mount) continue;
+          // @ts-ignore
+          paypal.Buttons({
+            style:{ layout:'vertical' },
+            createOrder: (_d, actions)=> actions.order.create({ purchase_units:[{ amount:{ value:String(p.price) }, description:`${p.name} Resume Plan` }]}),
+            onApprove: async (_d, actions)=>{ const d = await actions.order.capture(); successFlow(p.name, d?.id || Math.random().toString(36).slice(2,10).toUpperCase()); }
+          }).render('#'+id);
+        }
+      };
+      document.body.appendChild(s);
+    });
+  </script>
+</body>
+</html>

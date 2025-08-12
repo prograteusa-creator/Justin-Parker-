@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Parker Press — Pro Resumes</title>
+<style>
+  body{margin:0;background:#0b0b0c;color:#f5f7fa;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+  .wrap{max-width:900px;margin:28px auto;padding:0 16px}
+  h1{margin:0 0 6px;font:800 32px/1.1 system-ui}
+  .card{background:#111114;border:1px solid #1d1f22;border-radius:16px;padding:16px;margin-top:14px}
+  .grid{display:grid;gap:12px} @media(min-width:860px){.plans{grid-template-columns:repeat(3,1fr)}}
+  .price{font-size:32px;font-weight:900;margin:6px 0}
+  .btn{display:inline-block;padding:10px 14px;border-radius:12px;background:#0b84ff;color:#fff;text-decoration:none;border:0;cursor:pointer}
+  input,textarea{width:100%;padding:10px;border-radius:12px;border:1px solid #2a2d31;background:#0c0e11;color:#fff}
+  textarea{min-height:100px} .muted{opacity:.75} .small{font-size:12px}
+</style>
+<script>
+  function testPurchase(plan){
+    const id = Math.random().toString(36).slice(2,10).toUpperCase();
+    const ok = document.getElementById('ok');
+    ok.innerHTML = `Test purchase: <b>${plan}</b> · Order <b>${id}</b>. Scroll to intake below.`;
+    ok.style.display='block';
+    document.getElementById('plan').value = plan;
+    document.getElementById('order').value = id;
+    location.hash = 'intake';
+  }
+  function copyPromo(){
+    const u = new URL(location.href);
+    u.searchParams.set('utm_source','social');u.searchParams.set('utm_medium','organic');u.searchParams.set('utm_campaign','resume_launch');
+    navigator.clipboard.writeText(`Get a pro, ATS-friendly resume in 24h: ${u}`).then(()=>alert('Promo link copied')).catch(()=>alert('Copy failed'));
+  }
+</script>
+</head><body>
+<div class="wrap">
+  <h1>Parker Press — Pro Resumes</h1>
+  <p class="muted">ATS-friendly resumes, fast turnaround. Launching offers now.</p>
+
+  <div id="ok" class="card" style="display:none;background:#0e4429;border-color:#1a7f37">Success banner</div>
+
+  <section class="grid plans card">
+    <div>
+      <div class="muted small">Starter</div><div class="price">$49</div>
+      <button class="btn" onclick="testPurchase('Starter')">Test Purchase</button>
+    </div>
+    <div>
+      <div class="muted small">Pro</div><div class="price">$79</div>
+      <button class="btn" onclick="testPurchase('Pro')">Test Purchase</button>
+    </div>
+    <div>
+      <div class="muted small">Powerhouse</div><div class="price">$129</div>
+      <button class="btn" onclick="testPurchase('Powerhouse')">Test Purchase</button>
+    </div>
+  </section>
+
+  <section id="intake" class="card">
+    <h2 style="margin:0 0 8px">Project Intake</h2>
+    <p class="small muted">Tell us your target role and paste up to 3 job links.</p>
+    <form action="https://formspree.io/f/xyyylive" method="POST" class="grid" onsubmit="setTimeout(()=>alert('Thanks! We’ll follow up by email.'),100)">
+      <input name="name" placeholder="Your name">
+      <input name="email" type="email" placeholder="Your email" required>
+      <input name="role" placeholder="Target role (e.g., RN / Sales Manager / Frontend)">
+      <textarea name="jobs" placeholder="Paste job URLs"></textarea>
+      <textarea name="notes" placeholder="Notes (must-include achievements, industries, constraints)"></textarea>
+      <input type="hidden" id="plan" name="plan"><input type="hidden" id="order" name="order">
+      <button class="btn" type="submit">Send Intake</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2 style="margin:0 0 8px">FAQ</h2>
+    <details><summary>What’s included?</summary><div class="small muted">Starter: resume refresh. Pro: resume + cover letter. Powerhouse: resume + cover + LinkedIn polish.</div></details>
+    <details><summary>Turnaround time</summary><div class="small muted">Most drafts in 24–48 hours after intake.</div></details>
+    <details><summary>Refunds</summary><div class="small muted">Not happy with the first draft? We’ll revise or refund — your choice.</div></details>
+    <button class="btn" style="margin-top:10px" onclick="copyPromo()">Copy Promo Link</button>
+  </section>
+
+  <p class="small muted" style="margin:18px 0 40px">© Parker Press</p>
+</div>
+</body></html>
+
